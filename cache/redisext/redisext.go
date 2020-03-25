@@ -6,8 +6,9 @@ import (
 	"time"
 
 	redis2 "github.com/go-redis/redis"
-	"github.com/shawnfeng/sutil/cache/constants"
 	"github.com/opentracing/opentracing-go"
+	"github.com/shawnfeng/sutil/cache"
+	"github.com/shawnfeng/sutil/cache/constants"
 	"github.com/shawnfeng/sutil/cache/redis"
 	"github.com/shawnfeng/sutil/scontext"
 	"github.com/shawnfeng/sutil/slog/slog"
@@ -899,9 +900,12 @@ func SetConfiger(ctx context.Context, configerType constants.ConfigerType) error
 		slog.Errorf(ctx, "%s create configer err:%v", fun, err)
 		return err
 	}
-	slog.Infof(ctx, "%s %v configer created", fun, configerType)
+	err = configer.Init(ctx)
+	if err != nil {
+		slog.Errorf(ctx, "%s init configer err:%v", fun, err)
+	}
 	redis.DefaultConfiger = configer
-	return redis.DefaultConfiger.Init(ctx)
+	return err
 }
 
 func WatchUpdate(ctx context.Context) {
@@ -917,4 +921,5 @@ func init() {
 	} else {
 		slog.Infof(ctx, "%s redisext configer:%v been set", fun, constants.ConfigerTypeApollo)
 	}
+	WatchUpdate(ctx)
 }

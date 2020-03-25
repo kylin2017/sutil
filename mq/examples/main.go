@@ -33,8 +33,8 @@ func main() {
 		defer span.Finish()
 	}
 
-	_ = mq.SetConfiger(ctx, mq.ConfigerTypeApollo)
-	mq.WatchUpdate(ctx)
+	//_ = mq.SetConfiger(ctx, mq.ConfigerTypeApollo)
+	//mq.WatchUpdate(ctx)
 
 	/*
 		go func() {
